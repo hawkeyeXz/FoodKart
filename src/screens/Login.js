@@ -1,9 +1,9 @@
+"use client"
+
 import { useState } from "react"
-import { useNavigate } from "react-router-dom"
-import { Link } from "react-router-dom"
+import { useNavigate, Link } from "react-router-dom"
 import { motion } from "framer-motion"
-import { Form, Button, Card, Alert, InputGroup, Container, Row, Col } from "react-bootstrap"
-import { ArrowRight, Mail, Lock } from "lucide-react"
+import "../styles/Auth.css"
 
 export default function Login() {
   const navigate = useNavigate()
@@ -20,7 +20,7 @@ export default function Login() {
     setError("")
 
     try {
-      const response = await fetch("http://localhost:4000/api/loginuser", {
+      const response = await fetch("http://localhost:4000/api/auth/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -37,10 +37,18 @@ export default function Login() {
         setError("Invalid credentials. Please try again.")
       } else {
         localStorage.setItem("authToken", json.authToken)
-        console.log(localStorage.getItem("authToken"))
-        navigate("/home") // Redirect on success
+
+        // Store user data in localStorage
+        if (json.user) {
+          localStorage.setItem("userData", JSON.stringify(json.user))
+        }
+
+        // Dispatch a storage event to notify other components about the login
+        window.dispatchEvent(new Event("storage"))
+        navigate("/")
       }
     } catch (error) {
+      console.error("Login error:", error)
       setError("An error occurred. Please try again later.")
     } finally {
       setIsLoading(false)
@@ -52,76 +60,105 @@ export default function Login() {
   }
 
   return (
-    <Container fluid className="d-flex align-items-center justify-content-center vh-100 bg-light">
-      <Row className="w-100">
-        <Col md={{ span: 4, offset: 4 }}>
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-          >
-            <Card className="border-0 shadow-lg">
-              <Card.Header className="bg-white border-0 text-center pt-4 pb-0">
-                <Card.Title className="fs-2 fw-bold">Welcome back</Card.Title>
-                <Card.Subtitle className="text-muted mb-3">Enter your credentials to sign in</Card.Subtitle>
-              </Card.Header>
-              <Card.Body className="px-4 py-4">
-                <Form onSubmit={handleSubmit}>
-                  {error && (
-                    <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }} transition={{ duration: 0.3 }}>
-                      <Alert variant="danger" className="mb-4">
-                        {error}
-                      </Alert>
-                    </motion.div>
-                  )}
+    <div className="auth-container">
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+        className="auth-card"
+      >
+        <div className="auth-header">
+          <h2 className="auth-title">Welcome back</h2>
+          <p className="auth-subtitle">Enter your credentials to sign in</p>
+        </div>
 
-                  <Form.Group className="mb-3">
-                    <Form.Label htmlFor="email">Email</Form.Label>
-                    <InputGroup>
-                      <InputGroup.Text className="bg-light">
-                        <Mail size={18} />
-                      </InputGroup.Text>
-                      <Form.Control id="email" name="email" type="email" placeholder="name@example.com" value={credentials.email} onChange={onChange} required />
-                    </InputGroup>
-                  </Form.Group>
+        <div className="auth-body">
+          <form onSubmit={handleSubmit}>
+            {error && (
+              <motion.div
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: "auto" }}
+                transition={{ duration: 0.3 }}
+                className="alert alert-danger"
+              >
+                <i className="bi bi-exclamation-circle-fill me-2"></i>
+                {error}
+              </motion.div>
+            )}
 
-                  <Form.Group className="mb-4">
-                    <div className="d-flex justify-content-between align-items-center mb-1">
-                      <Form.Label htmlFor="password" className="mb-0">Password</Form.Label>
-                      <Link to="/forgot-password" className="text-decoration-none small">Forgot password?</Link>
-                    </div>
-                    <InputGroup>
-                      <InputGroup.Text className="bg-light">
-                        <Lock size={18} />
-                      </InputGroup.Text>
-                      <Form.Control id="password" name="password" type="password" placeholder="••••••••" value={credentials.password} onChange={onChange} required />
-                    </InputGroup>
-                  </Form.Group>
+            <div className="mb-3">
+              <label htmlFor="email" className="form-label">
+                Email
+              </label>
+              <div className="input-group">
+                <span className="input-group-text">
+                  <i className="bi bi-envelope"></i>
+                </span>
+                <input
+                  type="email"
+                  className="form-control"
+                  id="email"
+                  name="email"
+                  placeholder="name@example.com"
+                  value={credentials.email}
+                  onChange={onChange}
+                  required
+                />
+              </div>
+            </div>
 
-                  <Button type="submit" variant="primary" className="w-100 py-2" disabled={isLoading}>
-                    {isLoading ? (
-                      <>
-                        <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
-                        Signing in...
-                      </>
-                    ) : (
-                      "Sign in"
-                    )}
-                  </Button>
-                </Form>
-              </Card.Body>
-              <Card.Footer className="bg-white border-0 text-center py-3">
-                <p className="text-muted mb-0 small">
-                  Don't have an account?{" "}
-                  <Link to="/createuser" className="text-decoration-none fw-medium">
-                    Sign up <ArrowRight className="ms-1" size={14} />
-                  </Link>
-                </p>
-              </Card.Footer>
-            </Card>
-          </motion.div>
-        </Col>
-      </Row>
-    </Container>
+            <div className="mb-4">
+              <div className="d-flex justify-content-between align-items-center mb-1">
+                <label htmlFor="password" className="form-label mb-0">
+                  Password
+                </label>
+                <Link to="/forgot-password" className="text-decoration-none small">
+                  Forgot password?
+                </Link>
+              </div>
+              <div className="input-group">
+                <span className="input-group-text">
+                  <i className="bi bi-lock"></i>
+                </span>
+                <input
+                  type="password"
+                  className="form-control"
+                  id="password"
+                  name="password"
+                  placeholder="••••••••"
+                  value={credentials.password}
+                  onChange={onChange}
+                  required
+                />
+              </div>
+            </div>
+
+            <button type="submit" className="btn btn-primary w-100 py-2" disabled={isLoading}>
+              {isLoading ? (
+                <>
+                  <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                  Signing in...
+                </>
+              ) : (
+                <>
+                  <i className="bi bi-box-arrow-in-right me-2"></i>
+                  Sign in
+                </>
+              )}
+            </button>
+          </form>
+        </div>
+
+        <div className="auth-footer">
+          <p className="text-muted mb-0 small">
+            Don't have an account?{" "}
+            <Link to="/createuser" className="text-decoration-none fw-medium">
+              Sign up <i className="bi bi-arrow-right ms-1"></i>
+            </Link>
+          </p>
+        </div>
+      </motion.div>
+    </div>
   )
 }
+

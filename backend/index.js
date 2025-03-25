@@ -1,26 +1,35 @@
-const express = require('express')
+const express = require("express")
+const cors = require("cors")
+const connectDB = require("./config/db")
+
 const app = express()
-const port = 4000
-const mongoDB = require("./db")
+const port = process.env.PORT || 4000
 
-mongoDB();
+// Connect to MongoDB
+connectDB()
 
+// Middleware
+app.use(
+  cors({
+    origin: "http://localhost:3000",
+    credentials: true,
+  }),
+)
+app.use(express.json())
 
-app.get('/home', (req, res) => {
-  res.send('Hello World!')
+// Define routes
+app.use("/api/auth", require("./routes/auth"))
+app.use("/api/food", require("./routes/food"))
+app.use("/api/orders", require("./routes/orders"))
+app.use("/api/cart", require("./routes/cart"))
+
+// Basic route for testing
+app.get("/", (req, res) => {
+  res.send("FoodKart API is running")
 })
-app.use((req, res, next) => {
-  res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
-  res.setHeader(
-    "Access-Control-Allow-Headers",
-    "Origin, X-Requested-With, Content-Type, Accept"
-  );
-  next();
-});
-app.use(express.json());
-app.use('/api/', require('./Routes/CreateUser'));
-app.use('/api/', require('./Routes/DisplayData'));
 
+// Start server
 app.listen(port, () => {
-  console.log(`Example app listening on port ${port}`)
+  console.log(`FoodKart server running on port ${port}`)
 })
+

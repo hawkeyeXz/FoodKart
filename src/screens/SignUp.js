@@ -1,30 +1,30 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { Link } from "react-router-dom"; 
-import { motion } from "framer-motion";
-import { Form, Button, Card, Alert, InputGroup } from "react-bootstrap";
-import { ArrowLeft, User, Mail, Lock, MapPin } from "lucide-react";
+"use client"
+
+import { useState } from "react"
+import { useNavigate, Link } from "react-router-dom"
+import { motion } from "framer-motion"
+import "../styles/Auth.css"
 
 export default function SignUp() {
-  const navigate = useNavigate();
+  const navigate = useNavigate()
   const [credentials, setCredentials] = useState({
     name: "",
     email: "",
     password: "",
     geolocation: "",
-  });
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState("");
-  const [success, setSuccess] = useState(false);
+  })
+  const [isLoading, setIsLoading] = useState(false)
+  const [error, setError] = useState("")
+  const [success, setSuccess] = useState(false)
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    setIsLoading(true);
-    setError("");
-    setSuccess(false);
+    e.preventDefault()
+    setIsLoading(true)
+    setError("")
+    setSuccess(false)
 
     try {
-      const response = await fetch("http://localhost:4000/api/createuser", {
+      const response = await fetch("http://localhost:4000/api/auth/createuser", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -35,98 +35,180 @@ export default function SignUp() {
           password: credentials.password,
           location: credentials.geolocation,
         }),
-      });
+      })
 
-      const json = await response.json();
+      const json = await response.json()
 
       if (!json.success) {
-        setError("Please enter valid details");
+        setError("Please enter valid details")
       } else {
-        setSuccess(true);
+        setSuccess(true)
         // Redirect to login page after a short delay
         setTimeout(() => {
-          navigate("/login");
-        }, 2000);
+          navigate("/login")
+        }, 2000)
       }
     } catch (error) {
-      setError("An error occurred. Please try again later.");
+      setError("An error occurred. Please try again later.")
     } finally {
-      setIsLoading(false);
+      setIsLoading(false)
     }
-  };
+  }
 
   const onChange = (e) => {
-    setCredentials({ ...credentials, [e.target.name]: e.target.value });
-  };
+    setCredentials({ ...credentials, [e.target.name]: e.target.value })
+  }
 
   return (
-    <div className="d-flex align-items-center justify-content-center min-vh-100 bg-light">
+    <div className="auth-container">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
-        className="w-100"
-        style={{ maxWidth: "450px", padding: "0 15px" }}
+        className="auth-card"
       >
-        <Card className="border-0 shadow">
-          <Card.Header className="bg-white border-0 pt-4 pb-0">
-            <Card.Title className="fs-2 fw-bold mb-1">Create an account</Card.Title>
-            <Card.Subtitle className="text-muted mb-3">
-              Enter your information to create your account
-            </Card.Subtitle>
-          </Card.Header>
-          <Card.Body className="px-4 py-4">
-            <Form onSubmit={handleSubmit}>
-              {error && <Alert variant="danger" className="mb-4">{error}</Alert>}
-              {success && <Alert variant="success" className="mb-4">Account created successfully! Redirecting to login...</Alert>}
+        <div className="auth-header">
+          <h2 className="auth-title">Create an account</h2>
+          <p className="auth-subtitle">Enter your information to create your account</p>
+        </div>
 
-              <Form.Group className="mb-3">
-                <Form.Label htmlFor="name">Full Name</Form.Label>
-                <InputGroup>
-                  <InputGroup.Text className="bg-light"><User size={18} /></InputGroup.Text>
-                  <Form.Control id="name" name="name" placeholder="John Doe" value={credentials.name} onChange={onChange} required />
-                </InputGroup>
-              </Form.Group>
+        <div className="auth-body">
+          <form onSubmit={handleSubmit}>
+            {error && (
+              <motion.div
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: "auto" }}
+                transition={{ duration: 0.3 }}
+                className="alert alert-danger"
+              >
+                <i className="bi bi-exclamation-circle-fill me-2"></i>
+                {error}
+              </motion.div>
+            )}
 
-              <Form.Group className="mb-3">
-                <Form.Label htmlFor="email">Email</Form.Label>
-                <InputGroup>
-                  <InputGroup.Text className="bg-light"><Mail size={18} /></InputGroup.Text>
-                  <Form.Control id="email" name="email" type="email" placeholder="name@example.com" value={credentials.email} onChange={onChange} required />
-                </InputGroup>
-              </Form.Group>
+            {success && (
+              <motion.div
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: "auto" }}
+                transition={{ duration: 0.3 }}
+                className="alert alert-success"
+              >
+                <i className="bi bi-check-circle-fill me-2"></i>
+                Account created successfully! Redirecting to login...
+              </motion.div>
+            )}
 
-              <Form.Group className="mb-3">
-                <Form.Label htmlFor="password">Password</Form.Label>
-                <InputGroup>
-                  <InputGroup.Text className="bg-light"><Lock size={18} /></InputGroup.Text>
-                  <Form.Control id="password" name="password" type="password" placeholder="••••••••" value={credentials.password} onChange={onChange} required />
-                </InputGroup>
-              </Form.Group>
+            <div className="mb-3">
+              <label htmlFor="name" className="form-label">
+                Full Name
+              </label>
+              <div className="input-group">
+                <span className="input-group-text">
+                  <i className="bi bi-person"></i>
+                </span>
+                <input
+                  type="text"
+                  className="form-control"
+                  id="name"
+                  name="name"
+                  placeholder="John Doe"
+                  value={credentials.name}
+                  onChange={onChange}
+                  required
+                />
+              </div>
+            </div>
 
-              <Form.Group className="mb-4">
-                <Form.Label htmlFor="geolocation">Location</Form.Label>
-                <InputGroup>
-                  <InputGroup.Text className="bg-light"><MapPin size={18} /></InputGroup.Text>
-                  <Form.Control id="geolocation" name="geolocation" placeholder="New York, USA" value={credentials.geolocation} onChange={onChange} required />
-                </InputGroup>
-              </Form.Group>
+            <div className="mb-3">
+              <label htmlFor="email" className="form-label">
+                Email
+              </label>
+              <div className="input-group">
+                <span className="input-group-text">
+                  <i className="bi bi-envelope"></i>
+                </span>
+                <input
+                  type="email"
+                  className="form-control"
+                  id="email"
+                  name="email"
+                  placeholder="name@example.com"
+                  value={credentials.email}
+                  onChange={onChange}
+                  required
+                />
+              </div>
+            </div>
 
-              <Button type="submit" variant="primary" className="w-100 py-2 mt-2" disabled={isLoading}>
-                {isLoading ? "Creating account..." : "Create account"}
-              </Button>
-            </Form>
-          </Card.Body>
-          <Card.Footer className="bg-white border-0 text-center py-3">
-            <p className="text-muted mb-0 small">
-              Already have an account?{" "}
-              <Link to="/login" className="text-decoration-none fw-medium">
-                <ArrowLeft className="me-1" size={14} /> Sign in
-              </Link>
-            </p>
-          </Card.Footer>
-        </Card>
+            <div className="mb-3">
+              <label htmlFor="password" className="form-label">
+                Password
+              </label>
+              <div className="input-group">
+                <span className="input-group-text">
+                  <i className="bi bi-lock"></i>
+                </span>
+                <input
+                  type="password"
+                  className="form-control"
+                  id="password"
+                  name="password"
+                  placeholder="••••••••"
+                  value={credentials.password}
+                  onChange={onChange}
+                  required
+                />
+              </div>
+              <small className="form-text text-muted">Password must be at least 8 characters long</small>
+            </div>
+
+            <div className="mb-4">
+              <label htmlFor="geolocation" className="form-label">
+                Location
+              </label>
+              <div className="input-group">
+                <span className="input-group-text">
+                  <i className="bi bi-geo-alt"></i>
+                </span>
+                <input
+                  type="text"
+                  className="form-control"
+                  id="geolocation"
+                  name="geolocation"
+                  placeholder="New York, USA"
+                  value={credentials.geolocation}
+                  onChange={onChange}
+                  required
+                />
+              </div>
+            </div>
+
+            <button type="submit" className="btn btn-primary w-100 py-2" disabled={isLoading}>
+              {isLoading ? (
+                <>
+                  <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                  Creating account...
+                </>
+              ) : (
+                <>
+                  <i className="bi bi-person-plus me-2"></i>
+                  Create account
+                </>
+              )}
+            </button>
+          </form>
+        </div>
+
+        <div className="auth-footer">
+          <p className="text-muted mb-0 small">
+            Already have an account?{" "}
+            <Link to="/login" className="text-decoration-none fw-medium">
+              <i className="bi bi-arrow-left me-1"></i> Sign in
+            </Link>
+          </p>
+        </div>
       </motion.div>
     </div>
-  );
+  )
 }
+
