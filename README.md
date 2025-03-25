@@ -66,7 +66,7 @@ npm start
 |--------|-----------------------|------------------------------|
 | POST   | `/api/auth/createuser` | Register a new user          |
 | POST   | `/api/auth/loginuser`  | Login user                   |
-| GET    | `/api/food/foodData`   | Fetch food items             |
+| GET    | `/api/food/fooddata`   | Fetch food items             |
 | POST   | `/api/cart/add`        | Add item to cart             |
 | GET    | `/api/orders`          | Get user orders              |
 
