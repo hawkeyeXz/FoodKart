@@ -56,7 +56,7 @@ export default function Navbar() {
     setIsLoggedIn(false)
     setUser(null)
     setShowProfileMenu(false)
-    navigate("/login")
+    navigate("/")
   }
 
   const toggleProfileMenu = () => {
