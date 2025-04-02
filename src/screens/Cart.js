@@ -43,7 +43,7 @@ export default function Cart() {
       setLoading(true)
       const token = localStorage.getItem("authToken")
 
-      const response = await fetch("{API_URL}/api/cart", {
+      const response = await fetch(`${API_URL}/api/cart`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -89,7 +89,7 @@ export default function Cart() {
 
       const token = localStorage.getItem("authToken")
 
-      const response = await fetch("{API_URL}/api/cart/update", {
+      const response = await fetch(`${API_URL}/api/cart/update`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -119,7 +119,7 @@ export default function Cart() {
     try {
       const token = localStorage.getItem("authToken")
 
-      const response = await fetch(`{API_URL}/api/cart/remove/${itemId}`, {
+      const response = await fetch(`${API_URL}/api/cart/remove/${itemId}`, {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
@@ -145,7 +145,7 @@ export default function Cart() {
     try {
       const token = localStorage.getItem("authToken")
 
-      const response = await fetch("{API_URL}/api/cart/clear", {
+      const response = await fetch(`${API_URL}/api/cart/clear`, {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
@@ -193,7 +193,7 @@ export default function Cart() {
 
       const token = localStorage.getItem("authToken")
 
-      const response = await fetch("{API_URL}/api/orders/create", {
+      const response = await fetch(`${API_URL}/api/orders/create`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

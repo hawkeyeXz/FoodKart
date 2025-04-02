@@ -5,6 +5,7 @@ import Navbar from "../components/Navbar"
 import Footer from "../components/Footer"
 import Card from "../components/Card"
 import "../styles/Home.css"
+import API_URL from "../config/api"
 
 export default function Home() {
   const [foodCat, setFoodCat] = useState([])
@@ -18,7 +19,7 @@ export default function Home() {
     const getFoodData = async () => {
       try {
         setLoading(true)
-        const response = await fetch("{API_URL}/api/food/fooddata", {
+        const response = await fetch(`${API_URL}/api/food/fooddata`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
         })

@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom"
 import Navbar from "../components/Navbar"
 import Footer from "../components/Footer"
 import "../styles/Profile.css"
+import API_URL from "../config/api"
 
 export default function Profile() {
   const navigate = useNavigate()
@@ -42,7 +43,7 @@ export default function Profile() {
       setLoading(true)
       const token = localStorage.getItem("authToken")
 
-      const response = await fetch("{API_URL}/api/auth/getuser", {
+      const response = await fetch(`${API_URL}/api/auth/getuser`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -88,7 +89,7 @@ export default function Profile() {
     try {
       const token = localStorage.getItem("authToken")
 
-      const response = await fetch("{API_URL}/api/auth/updateprofile", {
+      const response = await fetch(`${API_URL}/api/auth/updateprofile`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
