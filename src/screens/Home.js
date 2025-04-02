@@ -18,7 +18,7 @@ export default function Home() {
     const getFoodData = async () => {
       try {
         setLoading(true)
-        const response = await fetch("http://localhost:4000/api/food/fooddata", {
+        const response = await fetch("{API_URL}/api/food/fooddata", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
         })

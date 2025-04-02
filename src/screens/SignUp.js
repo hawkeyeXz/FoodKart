@@ -24,7 +24,7 @@ export default function SignUp() {
     setSuccess(false)
 
     try {
-      const response = await fetch("http://localhost:4000/api/auth/createuser", {
+      const response = await fetch("{API_URL}/api/auth/createuser", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

@@ -5,6 +5,7 @@ import { Link, useNavigate } from "react-router-dom"
 import Navbar from "../components/Navbar"
 import Footer from "../components/Footer"
 import "../styles/Cart.css"
+import API_URL from "../config/api"
 
 export default function Cart() {
   const navigate = useNavigate()
@@ -42,7 +43,7 @@ export default function Cart() {
       setLoading(true)
       const token = localStorage.getItem("authToken")
 
-      const response = await fetch("http://localhost:4000/api/cart", {
+      const response = await fetch("{API_URL}/api/cart", {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -88,7 +89,7 @@ export default function Cart() {
 
       const token = localStorage.getItem("authToken")
 
-      const response = await fetch("http://localhost:4000/api/cart/update", {
+      const response = await fetch("{API_URL}/api/cart/update", {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -118,7 +119,7 @@ export default function Cart() {
     try {
       const token = localStorage.getItem("authToken")
 
-      const response = await fetch(`http://localhost:4000/api/cart/remove/${itemId}`, {
+      const response = await fetch(`{API_URL}/api/cart/remove/${itemId}`, {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
@@ -144,7 +145,7 @@ export default function Cart() {
     try {
       const token = localStorage.getItem("authToken")
 
-      const response = await fetch("http://localhost:4000/api/cart/clear", {
+      const response = await fetch("{API_URL}/api/cart/clear", {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
@@ -192,7 +193,7 @@ export default function Cart() {
 
       const token = localStorage.getItem("authToken")
 
-      const response = await fetch("http://localhost:4000/api/orders/create", {
+      const response = await fetch("{API_URL}/api/orders/create", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

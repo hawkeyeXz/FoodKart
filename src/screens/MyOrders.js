@@ -30,7 +30,7 @@ export default function MyOrders() {
       setLoading(true)
       const token = localStorage.getItem("authToken")
 
-      const response = await fetch("http://localhost:4000/api/orders/myorders", {
+      const response = await fetch("{API_URL}/api/orders/myorders", {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -57,7 +57,7 @@ export default function MyOrders() {
     try {
       const token = localStorage.getItem("authToken")
 
-      const response = await fetch(`http://localhost:4000/api/orders/cancel/${orderId}`, {
+      const response = await fetch(`{API_URL}/api/orders/cancel/${orderId}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",

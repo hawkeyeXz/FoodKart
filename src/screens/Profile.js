@@ -42,7 +42,7 @@ export default function Profile() {
       setLoading(true)
       const token = localStorage.getItem("authToken")
 
-      const response = await fetch("http://localhost:4000/api/auth/getuser", {
+      const response = await fetch("{API_URL}/api/auth/getuser", {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -88,7 +88,7 @@ export default function Profile() {
     try {
       const token = localStorage.getItem("authToken")
 
-      const response = await fetch("http://localhost:4000/api/auth/updateprofile", {
+      const response = await fetch("{API_URL}/api/auth/updateprofile", {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
